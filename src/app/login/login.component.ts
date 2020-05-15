@@ -17,12 +17,13 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(loginData) {
-    this.user = new User(1, "", "");
+    this.user = new User(null, "", "");
 
     this.user.username = loginData.username;
     this.user.password = loginData.password;
+    
 
-    this.api.login(this.user);
+    this.api.login(JSON.stringify(this.user));
   }
 
 }

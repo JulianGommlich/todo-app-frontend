@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { User } from './user';
 import { TodoList } from './todoList';
 import { TodoItem } from './todoItem';
 
-const localUrl = "https://localhost:8080";
+const localUrl = "http://localhost:8080/public/api";
 
 @Injectable({
   providedIn: 'root'

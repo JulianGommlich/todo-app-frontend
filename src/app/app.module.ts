@@ -9,6 +9,11 @@ import { TodoListViewComponent } from './todo-list-view/todo-list-view.component
 import { TodoListDetailViewComponent } from './todo-list-detail-view/todo-list-detail-view.component';
 import { TodoItemViewComponent } from './todo-item-view/todo-item-view.component';
 import { TodoItemDetailViewComponent } from './todo-item-detail-view/todo-item-detail-view.component';
+import { PasswordForgottenComponent } from './password-forgotten/password-forgotten.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatCardModule } from '@angular/material/card';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [
@@ -17,13 +22,18 @@ import { TodoItemDetailViewComponent } from './todo-item-detail-view/todo-item-d
     TodoListViewComponent,
     TodoListDetailViewComponent,
     TodoItemViewComponent,
-    TodoItemDetailViewComponent
+    TodoItemDetailViewComponent,
+    PasswordForgottenComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
+    BrowserAnimationsModule,
+    MatCardModule,
+    MatInputModule,
+    MatButtonModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

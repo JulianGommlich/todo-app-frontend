@@ -1,0 +1,24 @@
+div#loginPage {
+    margin-top: 19%;
+    margin-bottom: auto;
+    height: 23%;
+}
+div#loginPage div {
+    display: inline-block;
+    vertical-align: middle;
+}
+button#submit {
+    position: absolute;
+    right: 2.3em;
+    bottom: 1.5em;
+}
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    margin-bottom: 0;
+}
+footer img {
+    width: 100%;
+    margin-bottom: 0;
+}

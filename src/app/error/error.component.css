@@ -1,0 +1,19 @@
+img {
+    height: 100%;
+    width: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+mat-card {
+    padding: 4%;
+    margin-top: -33%;
+}
+button {
+    position: absolute;
+    right: 6%;
+}
+button a {
+    color: #00000A;
+    text-decoration: none;
+}

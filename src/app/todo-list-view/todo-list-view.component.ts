@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../api.service';
 import { User } from '../user';
 import { TodoList } from '../todoList';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-todo-list-view',
@@ -12,27 +13,76 @@ export class TodoListViewComponent implements OnInit {
 
   user: User;
 
-  constructor(private api: ApiService) { }
+  username: String = localStorage.getItem("user");
+
+  todoLists: TodoList[] = [ ]
+
+  constructor(private api: ApiService, private router: Router) { }
 
   ngOnInit(): void {
+    if (localStorage.getItem("token") == "null") { this.router.navigateByUrl("error"); }
+    this.api.getAllLists().subscribe(data => {
+      this.todoLists = data;
+    });
   }
 
-  onLoad() {
-    this.user = new User(1, "", "");
-
-    this.api.getAllLists(this.user);
+  toTasks(todoList: TodoList) {
+    localStorage.setItem("listTitle", todoList.name)
+    this.router.navigateByUrl("/lists/" + todoList.id + "/todos");
   }
 
-  deleteList(list: TodoList) {
-    this.user = new User(1, "", "");
+  makeTitleEditable(id: number) {
+    var title = document.getElementById("t" + id.toString());
+    var field = document.getElementById("f" + id.toString());
 
-    this.api.deleteList(this.user, list.id);
+    title.setAttribute("style", "display: none;");
+    field.setAttribute("style", "display: block;");
+  }
+
+  editTitle(id: number) {
+    this.todoLists.forEach(todoList => {
+      if (todoList.id == id) {
+        todoList.name = (<HTMLInputElement>document.getElementById("input_" + id)).value;
+        this.api.changeTodoList(todoList).subscribe((data) => {
+          console.log(data);
+        });
+      }
+    });
+
+    var title = document.getElementById("t" + id.toString());
+    var field = document.getElementById("f" + id.toString());
+
+    field.setAttribute("style", "display: none;");
+    title.setAttribute("style", "display: block;");
+  }
+
+  createList() {
+    if (this.todoLists.length > 0) {
+      var lastId = this.todoLists[this.todoLists.length-1].id;
+    } else {
+      var lastId = 1;
+    }
+    
+    this.todoLists.push({ "id": lastId + 1, "name": "Neue Liste", "creator": -1 });
+  }
+
+  deleteList(id: number) {
+      this.todoLists.forEach(todoList => {
+        if (todoList.id == id) {
+          this.todoLists.splice(this.todoLists.indexOf(todoList),1);
+          this.api.deleteList(id).subscribe((data) => {
+            console.log(data);
+          });
+        }
+      });
   }
 
   deleteAllLists() {
-    this.user = new User(1, "", "");
+    this.todoLists = [];
 
-    this.api.deleteAllLists(this.user);
+    this.api.deleteAllLists().subscribe((data) => {
+      console.log(data);
+    });
   }
 
 }

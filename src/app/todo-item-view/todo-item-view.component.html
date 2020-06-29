@@ -1,1 +1,78 @@
-<p>todo-item-view works!</p>
+<app-header></app-header>
+<nav class="breadcrumb">
+    <a class="breadcrumb-item" href="/lists">Todolisten</a>
+    <a class="breadcrumb-item active" href="/lists/{{listId}}/todos">{{listTitle}}</a>
+</nav>
+
+<div id="TodoListName" class="col-md-11 offset-md-1">
+    <h1>{{listTitle}}</h1>
+</div>
+<div id="todoItemViewButtons" class="col-md-11">
+    <button id="nameSort" mat-button (click)="sortByName()">Nach Name sortieren</button>
+    <button id="stateSort" mat-button (click)="sortByState()">Nach Status sortieren</button>
+    <button id="urgency" mat-button (click)="sortByUrgency()">Nach Dringlichkeit sortieren</button>
+    <button mat-raised-button color="primary" (click)="createTodo()">Neues Todo</button>
+    <button mat-raised-button color="warn" (click)="deleteAllTodoItems()">Alle Todos löschen</button>
+</div>
+<div id="todoItemTable" class="container-fluid">        
+        <div id="filterObjectSelect" class="col-md-2">
+            <mat-form-field class="example-full-width col-md-12">
+                <mat-label>Filtern nach...</mat-label>
+                <mat-select id="filterObject" value="state" required>
+                    <mat-option value="state">Status</mat-option>
+                    <mat-option value="priority">Priorität</mat-option>
+                    <mat-option value="dueDate">Deadline</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div id="filterValueInput" class="col-md-5">
+            <mat-form-field class="example-full-width col-md-12">
+                <mat-label>Filter</mat-label>
+                <input matInput (keyup)="applyFilter($event)" placeholder="In Arbeit, Hoch oder 1.1.2021">
+            </mat-form-field>
+        </div>
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    
+        <ng-container matColumnDef="Name">
+            <th mat-header-cell *matHeaderCellDef> Name </th>
+            <td mat-cell *matCellDef="let todoItem"> {{todoItem.title}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Beschreibung">
+            <th mat-header-cell *matHeaderCellDef> Beschreibung </th>
+            <td mat-cell *matCellDef="let todoItem"> {{todoItem.description}} </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="Status">
+            <th mat-header-cell *matHeaderCellDef> Status </th>
+            <td mat-cell *matCellDef="let todoItem"> {{mapState(todoItem.state)}} </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="Priorität">
+            <th mat-header-cell *matHeaderCellDef> Priorität </th>
+            <td mat-cell *matCellDef="let todoItem"> {{mapPriority(todoItem.priority)}} </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="Deadline">
+            <th mat-header-cell *matHeaderCellDef> Deadline </th>
+            <td mat-cell *matCellDef="let todoItem">
+                <span *ngIf="todoItem.dueDate != null">{{todoItem.dueDate.toLocaleDateString()}}</span>
+                <span *ngIf="todoItem.dueDate == null">-</span>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Delete">
+            <th mat-header-cell *matHeaderCellDef class="lastColumn"> ToDo löschen </th>
+            <td mat-cell *matCellDef="let todoItem" class="lastColumn"> 
+                <button mat-button (click)="deleteTodoItem(todoItem.id)">
+                    <img style="filter: invert(31%) sepia(99%) saturate(7443%) hue-rotate(358deg) brightness(90%) contrast(125%);" 
+                            src="https://img.icons8.com/android/24/000000/pencil.png"/>
+                </button> 
+            </td>
+        </ng-container>
+    
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="toTodo(row)" class="todoItemRow"></tr>
+    </table>
+    <button id="navigationBack" mat-raised-button><a href="/lists">Zurück</a></button>
+</div>

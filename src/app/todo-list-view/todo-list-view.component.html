@@ -1,1 +1,35 @@
-asdf
+<app-header></app-header>
+<nav class="breadcrumb">
+    <a class="breadcrumb-item active" href="/lists">Todolisten</a>
+</nav>
+
+<div id="welcomeMessage" class="col-md-11 offset-md-1">
+    <h1>Hallo, {{username}}! Ich freue mich, dass du da bist.</h1>
+</div>
+<div id="todoListButtons" class="col-md-3">
+    <button mat-raised-button color="primary" (click)="createList()">Neue Liste</button>
+    <button mat-raised-button color="warn" (click)="deleteAllLists()">Alle Listen löschen</button>
+</div>
+<div id="todoListOverview" class="col-md-11">
+    <span *ngIf="todoLists.length == 0">Hier sieht's aber noch leer aus...</span>
+    <div *ngFor="let todoList of todoLists">
+        <mat-card>
+            <div id="t{{todoList.id}}">
+                <mat-card-title>{{todoList.name}}</mat-card-title>
+                <button id="edit_{{todoList.id}}" mat-button (click)="makeTitleEditable(todoList.id)"><img src="https://img.icons8.com/android/24/000000/pencil.png"/></button>
+            </div>
+            <div id="f{{todoList.id}}" style="display: none;">
+                <mat-form-field>
+                    <mat-label>Name der Liste</mat-label>
+                    <input id="input_{{todoList.id}}" matInput type="text" value="{{todoList.name}}" required>
+                </mat-form-field>
+                <button mat-button (click)="editTitle(todoList.id)"><img src="https://img.icons8.com/metro/26/000000/save-as.png"/></button>
+            </div>
+            <mat-card-subtitle>Erstellt von: {{username}}</mat-card-subtitle>
+            <mat-card-content>
+                <button id="tasks" mat-button (click)="toTasks(todoList)"><a>Aufgaben &gt;</a></button><br><br>
+                <button id="delete" mat-button (click)="deleteList(todoList.id)"><a class="redA">Löschen &gt;</a></button>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

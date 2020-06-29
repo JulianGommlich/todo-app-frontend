@@ -1,0 +1,27 @@
+mat-card.container {
+    margin-top: 7%;
+    padding-top: 4%;
+    padding-bottom: 4%;
+    padding-left: 9%;
+    padding-right: 9%;
+}
+button#deleteButton {
+    position: absolute;
+    top: 11%;
+    right: 14%;
+}
+hr {
+    margin-bottom: 8%;
+}
+button#navigationBack {
+    position: absolute;
+    right: 22%;
+}
+button#navigationBack a {
+    text-decoration: none;
+    color: #00000A;
+}
+button#submit {
+    position: absolute;
+    right: 14%;
+}

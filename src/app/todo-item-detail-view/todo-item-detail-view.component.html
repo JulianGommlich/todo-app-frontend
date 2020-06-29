@@ -1,1 +1,58 @@
-<p>todo-item-detail-view works!</p>
+<app-header></app-header>
+<nav class="breadcrumb">
+    <a class="breadcrumb-item" href="/lists">Todolisten</a>
+    <a class="breadcrumb-item" href="/lists/{{listId}}/todos">{{listTitle}}</a>
+    <a *ngIf="todoItem.title != ''" class="breadcrumb-item active" href="/lists/{{listId}}/todos/{{todoId}}">{{todoItem.title}}</a>
+    <a *ngIf="todoItem.title == ''" class="breadcrumb-item active" href="/lists/{{listId}}/todos/{{todoId}}">Neues Todo</a>
+</nav>
+
+<mat-card class="container col-md-9">
+    <h1 *ngIf="todoItem.title != ''">{{todoItem.title}}</h1>
+    <h1 *ngIf="todoItem.title == ''">Neues ToDo</h1>
+    <hr>
+    <form #f="ngForm" (ngSubmit)="onSubmit(f.value)">
+        <button id="deleteButton" *ngIf="todoId != '-1'" mat-raised-button color="warn" (click)="deleteTodoItem()">Löschen</button>
+        <mat-form-field class="example-full-width col-md-6">
+            <mat-label>Name des ToDos</mat-label>
+            <input matInput id="title" [(ngModel)]="todoItem.title" name="title" #title="ngModel" required>
+        </mat-form-field><br><br>
+
+        <mat-form-field class="example-full-width col-md-6">
+            <mat-label>Beschreibungstext</mat-label>
+            <input matInput type="testfield" id="description" [(ngModel)]="todoItem.description" name="description" #description="ngModel">
+        </mat-form-field><br><br>
+
+        <!--[(ngModel)]="todoItem.priority" name="priority" #priority="ngModel"-->
+        <mat-form-field class="example-full-width col-md-6">
+            <mat-label>Priorität</mat-label>
+            <mat-select id="priority" [(value)]="priority" required>
+                <mat-option value="1">Sehr hoch</mat-option>
+                <mat-option value="2">Hoch</mat-option>
+                <mat-option value="3">Mittel</mat-option>
+                <mat-option value="4">Niedrig</mat-option>
+                <mat-option value="5">Sehr niedrig</mat-option>
+            </mat-select>
+        </mat-form-field><br><br>
+
+        <mat-form-field class="example-full-width col-md-6">
+            <mat-label>Deadline</mat-label>
+            <input matInput [matDatepicker]="picker" id="dueDate" [(ngModel)]="todoItem.dueDate" name="dueDate" #dueDate="ngModel">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field><br><br>
+        
+        <!--[(ngModel)]="todoItem.state" name="state" #state="ngModel"-->
+        <mat-form-field class="example-full-width col-md-6">
+            <mat-label>Bearbeitungsstatus</mat-label>
+            <mat-select id="state" [(value)]="state" required>
+                <mat-option value="1">Offen</mat-option>
+                <mat-option value="2">In Arbeit</mat-option>
+                <mat-option value="3">Erledigt</mat-option>
+                <mat-option value="4">Verspätet erledigt</mat-option>
+                <mat-option value="5">Abgebrochen</mat-option>
+            </mat-select>
+        </mat-form-field><br><br>
+        <button id="navigationBack" mat-button><a href="/lists/{{listId}}/todos">Abbrechen</a></button>
+        <button type="submit" id="submit" mat-raised-button color="primary">Speichern</button>
+    </form>
+</mat-card>

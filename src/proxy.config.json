@@ -1,0 +1,8 @@
+{
+    "/todo-app-backend/public/api/*": {
+        "target": "http://localhost:80",
+        "secure": false,
+        "logLevel": "debug"
+    }
+}
+   

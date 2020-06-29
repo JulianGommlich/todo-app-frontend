@@ -9,12 +9,12 @@
             <form #f="ngForm" (ngSubmit)="onSubmit(f.value)">
                 <mat-form-field class="example-full-width">
                     <mat-label>Benutzername</mat-label>
-                    <input matInput>
+                    <input matInput id="name" [(ngModel)]="user.username" name="username" #username="ngModel" required>
                 </mat-form-field><br><br>
 
                 <mat-form-field class="example-full-width">
                     <mat-label>Passwort</mat-label>
-                    <input matInput type="password">
+                    <input matInput type="password" id="password" [(ngModel)]="user.password" name="password" #password="ngModel" required>
                 </mat-form-field><br>
                 <a href="/forgottenPassword">Passwort vergessen?</a>
                 <button type="submit" id="submit" mat-raised-button color="primary">Login</button>

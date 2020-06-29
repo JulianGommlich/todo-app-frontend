@@ -1,6 +1,7 @@
 div#loginPage {
-    margin-top: 19%;
-    margin-bottom: auto;
+    position: absolute;
+    top: 39%;
+    left: 21.5%;
     height: 23%;
 }
 div#loginPage div {
@@ -19,6 +20,7 @@ footer {
     margin-bottom: 0;
 }
 footer img {
-    width: 100%;
+    width: 100.15%;
+    margin-left: -2pt;
     margin-bottom: 0;
 }

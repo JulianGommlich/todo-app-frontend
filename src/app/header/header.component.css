@@ -1,0 +1,8 @@
+button#menuButton {
+    position: absolute;
+    right: 1%;
+    top: .2%;
+}
+span {
+    color: red;
+}

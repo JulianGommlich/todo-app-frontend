@@ -55,18 +55,14 @@ export class TodoItemViewComponent implements OnInit {
       if (todoItem.id == id) {
         todoItems.splice(todoItems.indexOf(todoItem), 1);
         this.dataSource.data = todoItems;
-        this.api.deleteTodoItem(Number(this.listId), todoItem.id).subscribe((data) => {
-          console.log(data);
-        });
+        this.api.deleteTodoItem(Number(this.listId), todoItem.id);
       }
     });
   }
 
   deleteAllTodoItems() {
     this.dataSource.data = [];
-    this.api.deleteAllTodoItems(Number(this.listId)).subscribe((data) => {
-      console.log(data);
-    });
+    this.api.deleteAllTodoItems(Number(this.listId));
   }
 
   mapPriority(priorityNumber: number) {
@@ -183,7 +179,6 @@ export class TodoItemViewComponent implements OnInit {
   }
 
   applyFilter(event: Event): void {
-    console.log(this.todoItemsForFiltering);
     const filterValue = (event.target as HTMLInputElement).value.toLowerCase();
     const filterObject = document.getElementById("filterObject").innerText.trim().toLowerCase();
     var filteredList: TodoItem[] = [];

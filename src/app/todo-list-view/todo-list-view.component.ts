@@ -43,9 +43,7 @@ export class TodoListViewComponent implements OnInit {
     this.todoLists.forEach(todoList => {
       if (todoList.id == id) {
         todoList.name = (<HTMLInputElement>document.getElementById("input_" + id)).value;
-        this.api.changeTodoList(todoList).subscribe((data) => {
-          console.log(data);
-        });
+        this.api.changeTodoList(todoList);
       }
     });
 
@@ -66,9 +64,7 @@ export class TodoListViewComponent implements OnInit {
       this.todoLists.forEach(todoList => {
         if (todoList.id == id) {
           this.todoLists.splice(this.todoLists.indexOf(todoList),1);
-          this.api.deleteList(id).subscribe((data) => {
-            console.log(data);
-          });
+          this.api.deleteList(id);
         }
       });
   }
@@ -76,9 +72,7 @@ export class TodoListViewComponent implements OnInit {
   deleteAllLists() {
     this.todoLists = [];
 
-    this.api.deleteAllLists().subscribe((data) => {
-      console.log(data);
-    });
+    this.api.deleteAllLists();
   }
 
 }

@@ -35,9 +35,7 @@ export class TodoItemDetailViewComponent implements OnInit {
 
 
   deleteTodoItem() {
-    this.api.deleteTodoItem(Number(this.listId), Number(this.todoId)).subscribe((data) => {
-      console.log(data);
-    });
+    this.api.deleteTodoItem(Number(this.listId), Number(this.todoId));
     this.router.navigateByUrl("/lists/" + this.listId + "/todos");
   }
 
@@ -50,14 +48,10 @@ export class TodoItemDetailViewComponent implements OnInit {
         dueDate = f.dueDate;
       }
       var todoItem: TodoItem = new TodoItem(f.title, f.description, Number(f.priority), dueDate, Number(f.state), Number(this.listId));
-      this.api.createTodoItem(Number(this.listId), todoItem).subscribe((data) => {
-        console.log(data);
-      })
+      this.api.createTodoItem(Number(this.listId), todoItem);
     } else {
       var todoItem: TodoItem = new TodoItem(f.title, f.description, f.priority, f.dueDate, f.state, Number(this.listId), Number(this.todoId));
-      this.api.changeTodoItem(Number(this.listId), todoItem).subscribe((data) => {
-        console.log(data);
-      });
+      this.api.changeTodoItem(Number(this.listId), todoItem);
     }
     this.router.navigateByUrl("/lists/" + this.listId + "/todos")
   }

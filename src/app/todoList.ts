@@ -1,8 +1,8 @@
 export class TodoList {
 
     constructor (
-        public id: number,
         public name: string,
+        public id?: number,
         public creator?: number,
     ) {}
 }

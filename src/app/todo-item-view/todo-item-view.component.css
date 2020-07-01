@@ -41,3 +41,7 @@ button a {
     text-decoration: none;
     color: #00000A;
 }
+img {
+    width: 30px;
+    height: 20px;
+}

@@ -17,26 +17,21 @@ export class TodoItemViewComponent implements OnInit {
   listTitle: string = localStorage.getItem("listTitle");
 
   displayedColumns: string[] = ["Name", "Beschreibung", "Status", "Priorität", "Deadline", "Delete"];
-  todoItems : TodoItem[] = [
-    { "id": 1, "title": "Viel", "description": "sample", "priority": 3, "state": 1, "dueDate": this.date, "todoList": 1 },
-    { "id": 2, "title": "Zu", "description": "sample", "priority": 1, "state": 3, "dueDate": this.date, "todoList": 1 },
-    { "id": 3, "title": "Tun", "description": "sample", "priority": 2, "state": 4, "dueDate": null, "todoList": 1 },
-    { "id": 4, "title": "Hier", "description": "sample", "priority": 5, "state": 2, "dueDate": this.date, "todoList": 1 },
-  ];
-  dataSource;
+  dataSource: MatTableDataSource<TodoItem> = new MatTableDataSource;
   sortedData: TodoItem[];
+  todoItemsForFiltering: TodoItem[] = [];
 
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(private api: ApiService, private router: Router, private activatedRoute: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.dataSource = new MatTableDataSource<TodoItem>(this.todoItems);
     if (localStorage.getItem("token") == "null") { this.router.navigateByUrl("error"); }
     this.activatedRoute.params.subscribe(params => {
       this.listId = params.listId;
-      this.api.getTodosOfAList(params.listId).subscribe(() => {
-        console.log("Cool");
+      this.api.getTodosOfAList(params.listId).subscribe((data) => {
+        this.dataSource = new MatTableDataSource<TodoItem>(this.mapBackendData(data));
+        this.todoItemsForFiltering = this.dataSource.data;
       });
     })
   }
@@ -55,10 +50,11 @@ export class TodoItemViewComponent implements OnInit {
   }
 
   deleteTodoItem(id: number) {
-    this.todoItems.forEach(todoItem => {
+    var todoItems = this.dataSource.data;
+    this.dataSource.data.forEach(todoItem => {
       if (todoItem.id == id) {
-        this.todoItems.splice(this.todoItems.indexOf(todoItem), 1);
-        this.dataSource.data = this.todoItems;
+        todoItems.splice(todoItems.indexOf(todoItem), 1);
+        this.dataSource.data = todoItems;
         this.api.deleteTodoItem(Number(this.listId), todoItem.id).subscribe((data) => {
           console.log(data);
         });
@@ -67,8 +63,7 @@ export class TodoItemViewComponent implements OnInit {
   }
 
   deleteAllTodoItems() {
-    this.todoItems = [];
-    this.dataSource.data = this.todoItems;
+    this.dataSource.data = [];
     this.api.deleteAllTodoItems(Number(this.listId)).subscribe((data) => {
       console.log(data);
     });
@@ -108,9 +103,23 @@ export class TodoItemViewComponent implements OnInit {
     }
   }
 
+  mapBackendData(backendData: string): TodoItem[] {
+    var frontendData = [] 
+    var backendDataJSON = JSON.parse(JSON.stringify(backendData));
+    backendDataJSON.forEach(backendTodoItem => {
+      var frontendTodoItem = new TodoItem(backendTodoItem.itemname, 
+            backendTodoItem.itemdescription, Number(backendTodoItem.itempriority), new Date(backendTodoItem.dueDate),
+            Number(backendTodoItem.itemstate), backendTodoItem.listnummer, backendTodoItem.id);
+      frontendData.push(frontendTodoItem);
+    });
+
+    return frontendData;
+  }
+
   isSortedByNameAsc = false;
   sortByName() {
-    this.todoItems.sort((a, b) => {
+    var todoItems = this.dataSource.data;
+    todoItems.sort((a, b) => {
       if (a.title.toLowerCase() === b.title.toLowerCase()) {
         return 0;
       }
@@ -119,13 +128,14 @@ export class TodoItemViewComponent implements OnInit {
         if (!this.isSortedByNameAsc) { return (a.title.toLowerCase() < b.title.toLowerCase()) ? -1 : 1; }
       }
     });
-    this.dataSource.data = this.todoItems;
+    this.dataSource.data = todoItems;
     this.isSortedByNameAsc = !this.isSortedByNameAsc;
   }
 
   isSortedByStateAsc = false;
   sortByState() {
-    this.todoItems.sort((a, b) => {
+    var todoItems = this.dataSource.data;
+    todoItems.sort((a, b) => {
       if (a.state === b.state) {
         return 0;
       }
@@ -134,12 +144,13 @@ export class TodoItemViewComponent implements OnInit {
         if (!this.isSortedByStateAsc) { return (a.state < b.state) ? -1 : 1; }
       }
     });
-    this.dataSource.data = this.todoItems;
+    this.dataSource.data = todoItems;
     this.isSortedByStateAsc = !this.isSortedByStateAsc;
   }
 
   sortByUrgency() {
-    this.todoItems.sort((a, b) => {
+    var todoItems = this.dataSource.data;
+    todoItems.sort((a, b) => {
       if (a.dueDate === b.dueDate) {
         return 0;
       }
@@ -147,13 +158,13 @@ export class TodoItemViewComponent implements OnInit {
         return (a.dueDate > b.dueDate) ? -1 : 1;
       }
     });
-    for (var i = 0; i < this.todoItems.length - 1; i++) {
+    for (var i = 0; i < todoItems.length - 1; i++) {
       var identicalDates: boolean = false;
-      for (var j = i + 1; j < this.todoItems.length; j++) {
-        if (this.todoItems[i].dueDate == this.todoItems[j].dueDate) { identicalDates = true; }
+      for (var j = i + 1; j < todoItems.length; j++) {
+        if (todoItems[i].dueDate == todoItems[j].dueDate) { identicalDates = true; }
         else {
           if (identicalDates) {
-            var todoListArrayTmp = this.todoItems.splice(i,j-i).sort((a, b) => {
+            var todoListArrayTmp = todoItems.splice(i,j-i).sort((a, b) => {
               if (a.priority === b.priority) {
                 return 0;
               }
@@ -161,24 +172,25 @@ export class TodoItemViewComponent implements OnInit {
                 return (a.priority < b.priority) ? -1 : 1;
               }
             });
-            this.todoItems = this.todoItems.splice(0,i).concat(todoListArrayTmp, this.todoItems.splice(i,this.todoItems.length-i));
+            todoItems = todoItems.splice(0,i).concat(todoListArrayTmp, todoItems.splice(i,todoItems.length-i));
             i = j;
           }
           break;
         }
       }
     }
-    this.dataSource.data = this.todoItems;
+    this.dataSource.data = todoItems;
   }
 
   applyFilter(event: Event): void {
+    console.log(this.todoItemsForFiltering);
     const filterValue = (event.target as HTMLInputElement).value.toLowerCase();
     const filterObject = document.getElementById("filterObject").innerText.trim().toLowerCase();
     var filteredList: TodoItem[] = [];
 
     switch (filterObject) {
       case "status":
-        this.todoItems.forEach(todoItem => {
+        this.todoItemsForFiltering.forEach(todoItem => {
           var comparisonValue = this.mapState(todoItem.state).toLowerCase();
           if (comparisonValue.indexOf(filterValue) !== -1) {
             filteredList.push(todoItem);
@@ -186,7 +198,7 @@ export class TodoItemViewComponent implements OnInit {
         });
         break;
       case "priorität":
-        this.todoItems.forEach(todoItem => {
+        this.todoItemsForFiltering.forEach(todoItem => {
           var comparisonValue = this.mapPriority(todoItem.priority).toLowerCase();
           if (comparisonValue.indexOf(filterValue) !== -1) {
             filteredList.push(todoItem);
@@ -194,7 +206,7 @@ export class TodoItemViewComponent implements OnInit {
         });
         break;
       case "deadline":
-        this.todoItems.forEach(todoItem => {
+        this.todoItemsForFiltering.forEach(todoItem => {
           if (todoItem.dueDate != null && todoItem.dueDate.toLocaleDateString().toLowerCase().indexOf(filterValue) !== -1) {
             filteredList.push(todoItem);
           }

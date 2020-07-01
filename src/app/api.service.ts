@@ -53,6 +53,14 @@ export class ApiService {
     });
   }
 
+  createTodoList(list: TodoList): Observable<any> {
+    return this.http.post(localUrl + "/lists", list, {
+      headers: {
+        "token": localStorage.getItem("token")
+      }
+    });
+  }
+
   changeTodoList(list: TodoList): Observable<any> {
     return this.http.put(localUrl + "/lists/" + list.id, list, {
       headers: {
@@ -87,6 +95,15 @@ export class ApiService {
 
   deleteTodoItem(listID: number, itemID: number): Observable<any> {
     return this.http.delete(localUrl + "/lists/" + listID + "/tasks/" + itemID, {
+      headers: {
+        "token": localStorage.getItem("token")
+      }
+    });
+  }
+
+  createTodoItem(listID: number, item: TodoItem): Observable<any> {
+    console.log(item);
+    return this.http.post(localUrl + "/lists/" + listID + "/tasks", item, {
       headers: {
         "token": localStorage.getItem("token")
       }

@@ -17,7 +17,7 @@
 <div id="todoItemTable" class="container-fluid">        
         <div id="filterObjectSelect" class="col-md-2">
             <mat-form-field class="example-full-width col-md-12">
-                <mat-label>Filtern nach...</mat-label>
+                <mat-label>Suche nach...</mat-label>
                 <mat-select id="filterObject" value="state" required>
                     <mat-option value="state">Status</mat-option>
                     <mat-option value="priority">Priorität</mat-option>
@@ -56,14 +56,17 @@
         <ng-container matColumnDef="Deadline">
             <th mat-header-cell *matHeaderCellDef> Deadline </th>
             <td mat-cell *matCellDef="let todoItem">
-                <span *ngIf="todoItem.dueDate != null">{{todoItem.dueDate.toLocaleDateString()}}</span>
-                <span *ngIf="todoItem.dueDate == null">-</span>
+                <span *ngIf="todoItem.dueDate != null && todoItem.dueDate.toLocaleDateString() != 'Invalid Date'">{{todoItem.dueDate.toLocaleDateString()}}</span>
+                <span *ngIf="todoItem.dueDate == null || todoItem.dueDate.toLocaleDateString() == 'Invalid Date'">-</span>
             </td>
         </ng-container>
 
         <ng-container matColumnDef="Delete">
-            <th mat-header-cell *matHeaderCellDef class="lastColumn"> ToDo löschen </th>
-            <td mat-cell *matCellDef="let todoItem" class="lastColumn"> 
+            <th mat-header-cell *matHeaderCellDef class="lastColumn"></th>
+            <td mat-cell *matCellDef="let todoItem" class="lastColumn">
+                <button mat-button (click)="toTodo(todoItem)">
+                    <img src="https://img.icons8.com/ios-filled/50/000000/right2.png"/>
+                </button>
                 <button mat-button (click)="deleteTodoItem(todoItem.id)">
                     <img style="filter: invert(31%) sepia(99%) saturate(7443%) hue-rotate(358deg) brightness(90%) contrast(125%);" 
                             src="https://img.icons8.com/android/24/000000/pencil.png"/>
@@ -72,7 +75,7 @@
         </ng-container>
     
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="toTodo(row)" class="todoItemRow"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="todoItemRow"></tr>
     </table>
     <button id="navigationBack" mat-raised-button><a href="/lists">Zurück</a></button>
 </div>

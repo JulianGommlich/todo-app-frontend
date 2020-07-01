@@ -57,13 +57,9 @@ export class TodoListViewComponent implements OnInit {
   }
 
   createList() {
-    if (this.todoLists.length > 0) {
-      var lastId = this.todoLists[this.todoLists.length-1].id;
-    } else {
-      var lastId = 1;
-    }
-    
-    this.todoLists.push({ "id": lastId + 1, "name": "Neue Liste", "creator": -1 });
+    this.api.createTodoList(new TodoList("Neue Liste")).subscribe(() => {
+      window.location.reload();
+    });
   }
 
   deleteList(id: number) {

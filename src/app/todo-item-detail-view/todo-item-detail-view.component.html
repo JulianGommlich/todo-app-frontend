@@ -25,12 +25,12 @@
         <!--[(ngModel)]="todoItem.priority" name="priority" #priority="ngModel"-->
         <mat-form-field class="example-full-width col-md-6">
             <mat-label>Priorität</mat-label>
-            <mat-select id="priority" [(value)]="priority" required>
-                <mat-option value="1">Sehr hoch</mat-option>
-                <mat-option value="2">Hoch</mat-option>
-                <mat-option value="3">Mittel</mat-option>
-                <mat-option value="4">Niedrig</mat-option>
-                <mat-option value="5">Sehr niedrig</mat-option>
+            <mat-select id="priority" [(ngModel)]="todoItem.priority" name="priority" #priority="ngModel" required>
+                <mat-option [value]="1">Sehr hoch</mat-option>
+                <mat-option [value]="2">Hoch</mat-option>
+                <mat-option [value]="3">Mittel</mat-option>
+                <mat-option [value]="4">Niedrig</mat-option>
+                <mat-option [value]="5">Sehr niedrig</mat-option>
             </mat-select>
         </mat-form-field><br><br>
 
@@ -44,12 +44,12 @@
         <!--[(ngModel)]="todoItem.state" name="state" #state="ngModel"-->
         <mat-form-field class="example-full-width col-md-6">
             <mat-label>Bearbeitungsstatus</mat-label>
-            <mat-select id="state" [(value)]="state" required>
-                <mat-option value="1">Offen</mat-option>
-                <mat-option value="2">In Arbeit</mat-option>
-                <mat-option value="3">Erledigt</mat-option>
-                <mat-option value="4">Verspätet erledigt</mat-option>
-                <mat-option value="5">Abgebrochen</mat-option>
+            <mat-select id="state" [(ngModel)]="todoItem.state" name="state" #state="ngModel" required>
+                <mat-option [value]="1">Offen</mat-option>
+                <mat-option [value]="2">In Arbeit</mat-option>
+                <mat-option [value]="3">Erledigt</mat-option>
+                <mat-option [value]="4">Verspätet erledigt</mat-option>
+                <mat-option [value]="5">Abgebrochen</mat-option>
             </mat-select>
         </mat-form-field><br><br>
         <button id="navigationBack" mat-button><a href="/lists/{{listId}}/todos">Abbrechen</a></button>

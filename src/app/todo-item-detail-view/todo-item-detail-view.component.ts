@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from '../user';
 import { ApiService } from '../api.service';
-import { TodoList } from '../todoList';
 import { TodoItem } from '../todoItem';
 import { Router } from '@angular/router';
 
@@ -24,13 +23,10 @@ export class TodoItemDetailViewComponent implements OnInit {
   ngOnInit(): void {
     if (localStorage.getItem("token") == "null") { this.router.navigateByUrl("error"); }
     if (window.location.href.indexOf("newTodo") > -1) {
-      this.todoItem = new TodoItem(-1, "", "", -1, new Date(), -1, 3);
-      this.priority = this.todoItem.priority.toString();
-      this.state = this.todoItem.state.toString();
+      this.todoItem = new TodoItem("", "", -1, new Date(), -1, 3);
     } else {
       this.api.getTodoItem(Number(this.listId), Number(this.todoId)).subscribe((data) => {
-        console.log(data);
-        this.todoItem = data;
+        this.todoItem = this.mapBackendData(data);
         this.priority = this.todoItem.priority.toString();
         this.state = this.todoItem.state.toString();
       });
@@ -42,15 +38,29 @@ export class TodoItemDetailViewComponent implements OnInit {
     this.api.deleteTodoItem(Number(this.listId), Number(this.todoId)).subscribe((data) => {
       console.log(data);
     });
+    this.router.navigateByUrl("/lists/" + this.listId + "/todos");
   }
 
   onSubmit(f: any) {
-    if (this.todoId == "newTodo") { this.todoId = "-1"}
-    var todoItem: TodoItem = new TodoItem(Number(this.todoId), f.string, f.description, f.priority, f.dueDate, f.state, Number(this.listId));
+    if (this.todoId == "newTodo") {
+      var todoItem: TodoItem = new TodoItem(f.title, f.description, Number(f.priority), f.dueDate, Number(f.state), Number(this.listId));
+      this.api.createTodoItem(Number(this.listId), todoItem).subscribe((data) => {
+        console.log(data);
+      })
+    } else {
+      var todoItem: TodoItem = new TodoItem(f.title, f.description, f.priority, f.dueDate, f.state, Number(this.listId), Number(this.todoId));
+      this.api.changeTodoItem(Number(this.listId), todoItem).subscribe((data) => {
+        console.log(data);
+      });
+    }
+    this.router.navigateByUrl("/lists/" + this.listId + "/todos")
+  }
 
-    this.api.changeTodoItem(Number(this.listId), todoItem).subscribe((data) => {
-      console.log(data);
-    });
+  mapBackendData(backendData: string): TodoItem {
+    var backendTodoItem = JSON.parse(JSON.stringify(backendData));
+    return new TodoItem(backendTodoItem.itemname, 
+        backendTodoItem.itemdescription, Number(backendTodoItem.itempriority), new Date(backendTodoItem.dueDate),
+        Number(backendTodoItem.itemstate), backendTodoItem.listnummer, backendTodoItem.id);
   }
 
 }

@@ -43,7 +43,13 @@ export class TodoItemDetailViewComponent implements OnInit {
 
   onSubmit(f: any) {
     if (this.todoId == "newTodo") {
-      var todoItem: TodoItem = new TodoItem(f.title, f.description, Number(f.priority), f.dueDate, Number(f.state), Number(this.listId));
+      var dueDate;
+      if (f.dueDate == null) {
+        dueDate = '00-00-0000';
+      } else {
+        dueDate = f.dueDate;
+      }
+      var todoItem: TodoItem = new TodoItem(f.title, f.description, Number(f.priority), dueDate, Number(f.state), Number(this.listId));
       this.api.createTodoItem(Number(this.listId), todoItem).subscribe((data) => {
         console.log(data);
       })
